@@ -10,3 +10,5 @@ The endpoints that are exposed are
 For the needs of the api is been used sqlite as a DB.
 
 For the front-end javascript, HTML and jquery
+
+To run the app run : python api.py
