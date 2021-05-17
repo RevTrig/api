@@ -4,14 +4,14 @@
 
 <html>
    <body>
-      <form action = "http://localhost:5000/upload_articles" method = "POST" enctype = "multipart/form-data">
+      <form action = "http://localhost:5000/upload_articles" method = "POST" enctype = "multipart/form-data" >
          <p>Upload here the invetory file</p>
-         <input type = "file" name = "File" />
+         <input type = "file" name = "File" accept=".json" onchange="ValidateSingleInput(this);" />
          <input type = "submit" value = "Submit articles" />
       </form>
-      <form action = "http://localhost:5000/upload_products" method = "POST" enctype = "multipart/form-data">
+      <form action = "http://localhost:5000/upload_products" method = "POST" enctype = "multipart/form-data" >
          <p>Upload here your products</p>
-         <input type = "file" name = "File" />
+         <input type = "file" name = "File" accept=".json" onchange="ValidateSingleInput(this);" />
          <input type = "submit" value = "Submit products" />
       </form>
       <form action = "http://localhost:5000/products" method = "GET" enctype = "multipart/form-data">
@@ -49,4 +49,28 @@
           }
         });
     }
+
+var _validFileExtensions = [".json"];    
+function ValidateSingleInput(oInput) {
+    if (oInput.type == "file") {
+        var sFileName = oInput.value;
+         if (sFileName.length > 0) {
+            var blnValid = false;
+            for (var j = 0; j < _validFileExtensions.length; j++) {
+                var sCurExtension = _validFileExtensions[j];
+                if (sFileName.substr(sFileName.length - sCurExtension.length, sCurExtension.length).toLowerCase() == sCurExtension.toLowerCase()) {
+                    blnValid = true;
+                    break;
+                }
+            }
+             
+            if (!blnValid) {
+                alert("Sorry, " + sFileName + " is invalid, allowed extensions are: " + _validFileExtensions.join(", "));
+                oInput.value = "";
+                return false;
+            }
+        }
+    }
+    return true;
+}  
 </script>
