@@ -20,44 +20,50 @@ def home():
 @app.route('/upload_articles', methods = ['POST'])
 def upload():
     f = request.files['File']
-    f.save(secure_filename(f.filename))
-    f = open(f.filename,)  
-    # returns JSON object as a dictionary
-    data = json.load(f) 
-    # Iterating through the json list
-    for article_details in data['inventory']:
-        art_id= article_details["art_id"]
-        name = article_details["name"]
-        stock = article_details["stock"]
-        result = controller.insert_article(art_id,name,stock)   
-    # Closing file
-    f.close()
-    return render_template('articles.html')
+    if(f.filename):
+        f.save(secure_filename(f.filename))
+        f = open(f.filename,)  
+        # returns JSON object as a dictionary
+        data = json.load(f) 
+        # Iterating through the json list
+        for article_details in data['inventory']:
+            art_id= article_details["art_id"]
+            name = article_details["name"]
+            stock = article_details["stock"]
+            result = controller.insert_article(art_id,name,stock)   
+        # Closing file
+        f.close()
+        return render_template('articles.html')
+    else:
+        return render_template('error_articles.html')
 
 @app.route('/upload_products', methods = ['POST'])
 def upload_products():
     f = request.files['File']
-    f.save(secure_filename(f.filename))
-    f = open(f.filename,)
-    # returns JSON object as  a dictionary
-    data = json.load(f)  
-    # Iterating through the json list
-    for product_details in data['products']:
-        #art_id= product_details["art_id"]
-        name = product_details["name"]
-        price = 50
-        contain_articles_id = str(uuid4())
-        if(controller.insert_products(name,price,contain_articles_id)):
-            contained_articles = product_details['contain_articles']
-            for contained_article in contained_articles:
-                article_art_id = contained_article['art_id']
-                amount_of = contained_article['amount_of']
-                contained_articles = controller.insert_contain_articles(contain_articles_id,article_art_id,amount_of)
-        else:
-            return render_template('error_products.html')
-    # Closing file
-    f.close()
-    return render_template('products.html')
+    if(f.filename):
+        f.save(secure_filename(f.filename))
+        f = open(f.filename,)
+        # returns JSON object as  a dictionary
+        data = json.load(f)  
+        # Iterating through the json list
+        for product_details in data['products']:
+            #art_id= product_details["art_id"]
+            name = product_details["name"]
+            price = 50
+            contain_articles_id = str(uuid4())
+            if(controller.insert_products(name,price,contain_articles_id)):
+                contained_articles = product_details['contain_articles']
+                for contained_article in contained_articles:
+                    article_art_id = contained_article['art_id']
+                    amount_of = contained_article['amount_of']
+                    contained_articles = controller.insert_contain_articles(contain_articles_id,article_art_id,amount_of)
+            else:
+                return render_template('duplicate_products.html')
+        # Closing file
+        f.close()
+        return render_template('products.html')
+    else:
+        return render_template('error_products.html')
 
 @app.route("/products/<name>", methods=["DELETE"])
 def delete_products(name):
