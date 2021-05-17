@@ -1,7 +1,7 @@
 # api
 
 This is a Flask-api
-The endpoints that are exposed are
+The exposed endpoints are
 - GET all available products
 - DELETE products by name
 - POST Upload products.json
