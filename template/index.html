@@ -1,1 +1,52 @@
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+
+<html>
+   <body>
+      <form action = "http://localhost:5000/upload_articles" method = "POST" enctype = "multipart/form-data">
+         <p>Upload here the invetory file</p>
+         <input type = "file" name = "File" />
+         <input type = "submit" value = "Submit articles" />
+      </form>
+      <form action = "http://localhost:5000/upload_products" method = "POST" enctype = "multipart/form-data">
+         <p>Upload here your products</p>
+         <input type = "file" name = "File" />
+         <input type = "submit" value = "Submit products" />
+      </form>
+      <form action = "http://localhost:5000/products" method = "GET" enctype = "multipart/form-data">
+         <input type = "submit" value = "View products" />
+      </form>
+
+      <p style="font-family:verdana">
+         Choose product to delete :<SELECT id="productid" style="font-family:verdana">
+         {% for j in productlist %}
+           <OPTION value={{j['name']}}>{{j['name']}}</OPTION>
+         {% endfor %}
+         </SELECT>
+         </p>
+         <input id="deleteMe" type="button" value="Delete product" onclick="doDelete();" />
+ 
+   </body>
+</html>
+
+
+<script>
+   var e = document.getElementById("productid");
+   var value = e.options[e.selectedIndex].text;
+
+   function doDelete() {
+        $.ajax({
+            url: 'http://localhost:5000/products/'+ value,
+            type: 'DELETE',
+            success: function (result) {
+                location.reload();            
+            },
+        error: function (result) {
+            
+              alert('Something went wrong...', '', 'error')
+            
+          }
+        });
+    }
+</script>
